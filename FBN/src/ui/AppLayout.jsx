@@ -3,8 +3,6 @@ import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 
-import { useState } from "react";
-
 const StyledAppLayout = styled.div`
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -16,7 +14,6 @@ function AppLayout() {
     <StyledAppLayout>
       <Header />
       <Main />
-
       <Footer />
     </StyledAppLayout>
   );
