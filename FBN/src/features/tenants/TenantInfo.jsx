@@ -24,10 +24,10 @@ const InfoSmallBox = styled.div`
   gap: 0.2rem;
 `;
 const ImgBox = styled.div`
-  background-color: red;
   width: 5rem;
   height: 5rem;
 `;
+const Img = styled.img``;
 const Grid = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,7 +54,9 @@ function TenantInfo() {
   return (
     <TenantBox>
       <InfoBox>
-        <ImgBox></ImgBox>
+        <ImgBox>
+          <Img src="../../../public/user.png" />
+        </ImgBox>
         <InfoSmallBox>
           <Name>Bwanika Robert</Name>
           <Contact> +256 757 082 687</Contact>

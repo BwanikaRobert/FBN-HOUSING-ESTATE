@@ -1,7 +1,6 @@
 import { Outlet } from "react-router";
 import styled from "styled-components";
 import Menu from "./Menu";
-import { MenuProvider } from "../services/useMenuApi";
 
 const StyledMain = styled.main`
   padding: 2rem;
@@ -12,9 +11,8 @@ function Main() {
   return (
     <StyledMain>
       <Outlet />
-      <MenuProvider>
-        <Menu />
-      </MenuProvider>
+
+      <Menu />
     </StyledMain>
   );
 }

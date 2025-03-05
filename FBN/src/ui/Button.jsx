@@ -18,7 +18,9 @@ const StyledButton = styled.button`
       color: var(--color-brand-800);
       background-color: var(--color-brand-400);
       &:hover {
-        background-color: var(--color-brand-200);
+        color: var(--color-grey-0);
+        background-color: var(--color-red-700);
+        border: 1px solid var(--color-red-700);
       }
     `}
   &:focus {

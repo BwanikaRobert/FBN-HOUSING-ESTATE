@@ -1,12 +1,18 @@
 import { BiMenu } from "react-icons/bi";
-import { useMenu } from "../services/useMenu";
+import { useLocal } from "../hooks/useLocal";
+import { LuX } from "react-icons/lu";
 
 function MenuButton() {
-  const { setOpenMenu } = useMenu();
-  function handleClick() {
-    setOpenMenu((value) => !value);
-  }
-  return <BiMenu onClick={handleClick} />;
+  const { menuOpen, dispatch } = useLocal();
+  return (
+    <div
+      onClick={() => {
+        dispatch({ type: "toggleMenu" });
+      }}
+    >
+      {menuOpen ? <LuX /> : <BiMenu />}
+    </div>
+  );
 }
 
 export default MenuButton;

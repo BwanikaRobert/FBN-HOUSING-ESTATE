@@ -7,7 +7,7 @@ import Row from "./Row";
 import FormRow from "./FormRow";
 import Label from "./Label";
 
-const StyledForm = styled.form`
+export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -17,6 +17,8 @@ const StyledForm = styled.form`
 export const H2 = styled.h2`
   text-align: center;
   text-transform: capitalize;
+  font-size: 3rem;
+  font-weight: 500;
 `;
 const FakeTenants = [
   {
