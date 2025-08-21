@@ -6,10 +6,12 @@ class TenantModel extends Tenant {
     required super.name,
     super.tel,
     super.nationalId,
-    super.roomId,
-    required super.monthlyRent,
+    super.lastPaidMonth,
+    super.lastBalance,
+    super.payableAmount,
+    super.roomTypes,
     required super.createdAt,
-    super.roomType,
+
     super.lastPaymentDate,
   });
 
@@ -19,10 +21,13 @@ class TenantModel extends Tenant {
       name: json['name'] as String,
       tel: json['tel'] as String?,
       nationalId: json['national_id'] as String?,
-      roomId: json['room_id'] as String?,
-      monthlyRent: (json['monthly_rent'] as num).toDouble(),
+      lastPaidMonth: json['last_paid_month'] as int?,
+      lastBalance: json['balance_month'] as int?,
+      payableAmount: json['payable_amount'] as double?,
+      roomTypes: json['room_types'] as List<String>?,
+
       createdAt: DateTime.parse(json['created_at'] as String),
-      roomType: json['rooms']?['type'] as String?,
+
       lastPaymentDate: json['last_payment_date'] != null
           ? DateTime.parse(json['last_payment_date'] as String)
           : null,
@@ -35,8 +40,7 @@ class TenantModel extends Tenant {
       'name': name,
       'tel': tel,
       'national_id': nationalId,
-      'room_id': roomId,
-      'monthly_rent': monthlyRent,
+
       'created_at': createdAt.toIso8601String(),
     };
   }

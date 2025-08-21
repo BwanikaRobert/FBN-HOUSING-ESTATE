@@ -3,10 +3,12 @@ class Tenant {
   final String name;
   final String? tel;
   final String? nationalId;
-  final String? roomId;
-  final double monthlyRent;
+  final int? lastPaidMonth;
+  final int? lastBalance;
   final DateTime createdAt;
-  final String? roomType;
+  final double? payableAmount;
+  final List<String>? roomTypes;
+
   final DateTime? lastPaymentDate;
 
   const Tenant({
@@ -14,10 +16,13 @@ class Tenant {
     required this.name,
     this.tel,
     this.nationalId,
-    this.roomId,
-    required this.monthlyRent,
+    this.lastPaidMonth,
+    this.lastBalance,
+    this.payableAmount,
+    this.roomTypes,
+
     required this.createdAt,
-    this.roomType,
+
     this.lastPaymentDate,
   });
 
@@ -37,10 +42,9 @@ class Tenant {
       name: name ?? this.name,
       tel: tel ?? this.tel,
       nationalId: nationalId ?? this.nationalId,
-      roomId: roomId ?? this.roomId,
-      monthlyRent: monthlyRent ?? this.monthlyRent,
+
       createdAt: createdAt ?? this.createdAt,
-      roomType: roomType ?? this.roomType,
+
       lastPaymentDate: lastPaymentDate ?? this.lastPaymentDate,
     );
   }

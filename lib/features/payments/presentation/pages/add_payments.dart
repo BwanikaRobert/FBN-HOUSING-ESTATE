@@ -1,3 +1,6 @@
+import 'package:fbn/features/payments/domain/repositories/data/models/services/calculate_payments.dart';
+import 'package:fbn/features/tenants/data/repositories/tenant_repository.dart';
+import 'package:fbn/features/tenants/data/services/tenant_service.dart';
 import 'package:fbn/features/tenants/domain/entities/tenants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +19,7 @@ class AddPaymentPage extends ConsumerStatefulWidget {
 class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
-  final _receivedByController = TextEditingController(text: 'Admin');
+  final _receivedByController = TextEditingController(text: 'Robert');
 
   Tenant? _selectedTenant;
   bool _isLoading = false;
@@ -43,12 +46,26 @@ class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
         amount: double.parse(_amountController.text),
         receivedBy: _receivedByController.text,
       );
-
+      RentPaymentResult paymentResult = calculateRentPayment(
+        monthlyRent: _selectedTenant!.payableAmount,
+        lastPaidMonth: _selectedTenant!.lastPaidMonth,
+        amountPaid: double.parse(_amountController.text),
+        previousBalance: double.parse(_selectedTenant!.lastBalance.toString()),
+      );
       await ref.read(createPaymentProvider(params).future);
+      final tenantService = ref.read(tenantServiceProvider);
+      await tenantService.updateTenant(
+        tenantId: _selectedTenant!.id,
+        balanceMonth: paymentResult.balanceOnEndMonth,
+        lastPaidMonth: paymentResult.endMonth,
+      );
+
+      print(paymentResult);
 
       if (mounted) {
         // Invalidate payments to refresh the list
         ref.invalidate(paymentsProvider);
+        ref.invalidate(tenantsProvider);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -176,16 +193,9 @@ class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      tenant.name,
+                                      tenant.name.toUpperCase(),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Monthly rent: \$${tenant.monthlyRent.toStringAsFixed(2)}',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
                                       ),
                                     ),
                                   ],
@@ -195,10 +205,10 @@ class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
                             onChanged: (tenant) {
                               setState(() {
                                 _selectedTenant = tenant;
-                                if (tenant != null) {
-                                  _amountController.text = tenant.monthlyRent
-                                      .toStringAsFixed(2);
-                                }
+                                // if (tenant != null) {
+                                //   _amountController.text = tenant.monthlyRent
+                                //       .toStringAsFixed(2);
+                                // }
                               });
                             },
                             validator: (value) {
@@ -289,7 +299,7 @@ class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
                           if (amount <= 0) {
                             return 'Amount must be greater than 0';
                           }
-                          if (amount > 10000) {
+                          if (amount > 1000000) {
                             return 'Amount seems too high. Please verify.';
                           }
                           return null;
@@ -377,44 +387,6 @@ class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
                                     ),
                                   ],
                                 ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Help Card
-              Card(
-                color: Colors.blue.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline, color: Colors.blue.shade700),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Quick Tip',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue.shade700,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'The amount will auto-fill with the tenant\'s monthly rent when you select them.',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.blue.shade600,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ],

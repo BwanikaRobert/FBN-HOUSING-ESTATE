@@ -1,5 +1,6 @@
+import 'package:fbn/utils/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:fbn/features/tenants/domain/entities/tenants.dart';
 
 class TenantTile extends StatelessWidget {
@@ -10,10 +11,7 @@ class TenantTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(tenant);
-    final lastPaymentText = tenant.lastPaymentDate != null
-        ? DateFormat('MMM yyyy').format(tenant.lastPaymentDate!)
-        : 'No payments';
+    print(tenant.lastPaymentDate);
 
     return Card(
       child: ListTile(
@@ -24,17 +22,14 @@ class TenantTile extends StatelessWidget {
           ),
         ),
         title: Text(
-          tenant.name,
+          tenant.name.toUpperCase(),
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Rent: \$${tenant.monthlyRent.toStringAsFixed(2)}'),
-            Text('Last paid: $lastPaymentText'),
-          ],
+          children: [Text('Last paid: ${getMonthName(tenant.lastPaidMonth!)}')],
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+
         onTap: onTap,
         isThreeLine: true,
       ),

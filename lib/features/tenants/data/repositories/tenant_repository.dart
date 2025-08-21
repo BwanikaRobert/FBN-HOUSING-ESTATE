@@ -18,6 +18,11 @@ class TenantRepository implements TenantRepositoryInterface {
   }
 
   @override
+  Future<Tenant?> updateTenant(String id) async {
+    return await _tenantService.getTenantById(id);
+  }
+
+  @override
   Stream<List<Tenant>> watchTenants() {
     return _tenantService.watchTenants();
   }

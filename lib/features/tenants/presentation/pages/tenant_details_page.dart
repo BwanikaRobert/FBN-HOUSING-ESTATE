@@ -1,11 +1,21 @@
+import 'package:fbn/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fbn/features/tenants/domain/entities/tenants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TenantDetailsPage extends StatelessWidget {
   final Tenant tenant;
 
   const TenantDetailsPage({super.key, required this.tenant});
+  Future<void> _launchPhoneURL(String phoneNumber) async {
+    Uri url = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +23,13 @@ class TenantDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(tenant.name),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await _launchPhoneURL('+2567778888');
+        },
+
+        child: const Icon(Icons.phone),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -48,14 +65,18 @@ class TenantDetailsPage extends StatelessWidget {
                       tenant.nationalId ?? 'Not provided',
                     ),
                     const SizedBox(height: 12),
+                    _buildDetailRow('Rooms', '', rooms: tenant.roomTypes),
+                    const SizedBox(height: 12),
+                    _buildDetailRow('Monthly Rent', '${tenant.payableAmount}'),
+                    const SizedBox(height: 12),
                     _buildDetailRow(
-                      'Room Type',
-                      tenant.roomType ?? 'Not assigned',
+                      'Outstanding Balance',
+                      '${calculateOutstandingBalance(monthlyRent: tenant.payableAmount!, lastPaidMonth: tenant.lastPaidMonth!, previousBalance: tenant.lastBalance!.toDouble())}',
                     ),
                     const SizedBox(height: 12),
                     _buildDetailRow(
-                      'Monthly Rent',
-                      '\$${tenant.monthlyRent.toStringAsFixed(2)}',
+                      'Last Paid Month',
+                      getMonthName(tenant.lastPaidMonth!),
                     ),
                     const SizedBox(height: 12),
                     _buildDetailRow(
@@ -76,7 +97,7 @@ class TenantDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildDetailRow(String label, String value, {List<dynamic>? rooms}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,10 +112,12 @@ class TenantDetailsPage extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
+          child: rooms != null
+              ? Row(children: rooms.map((room) => Text('$room, ')).toList())
+              : Text(
+                  value,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
         ),
       ],
     );
