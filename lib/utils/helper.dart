@@ -34,13 +34,13 @@ double calculateOutstandingBalance({
   int monthsDue;
   print('dates');
 
+  // if (now.day < DateTime(now.year, now.month + 1, 1).day) {
+  //   // Only count completed months → so we don't include this month
+  // }
   if (currentMonth <= lastPaidMonth) {
     return previousBalance; // no new months fully completed
   }
-  if (previousBalance > 0) {
-    lastPaidMonth = lastPaidMonth + 1;
-  }
-  monthsDue = currentMonth - lastPaidMonth;
 
+  monthsDue = currentMonth - lastPaidMonth - 1;
   return (monthsDue * monthlyRent) + previousBalance;
 }
