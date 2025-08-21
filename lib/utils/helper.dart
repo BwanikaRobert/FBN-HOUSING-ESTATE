@@ -34,9 +34,6 @@ double calculateOutstandingBalance({
   int monthsDue;
   print('dates');
 
-  // if (now.day < DateTime(now.year, now.month + 1, 1).day) {
-  //   // Only count completed months → so we don't include this month
-  // }
   if (currentMonth <= lastPaidMonth) {
     return previousBalance; // no new months fully completed
   }

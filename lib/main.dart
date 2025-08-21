@@ -23,6 +23,14 @@ class RentalApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    // RentPaymentResult result = calculateRentPayment(
+    //   monthlyRent: 200000,
+    //   lastPaidMonth: 11,
+    //   amountPaid: 450000,
+    //   previousBalance: 0,
+    // );
+
+    // print(result);
 
     return MaterialApp.router(
       title: 'FBN',

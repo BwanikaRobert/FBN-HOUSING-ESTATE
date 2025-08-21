@@ -13,7 +13,8 @@ class PaymentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    print('time');
+    print(payment.createdAt);
     return Card(
       elevation: 2,
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -56,7 +57,7 @@ class PaymentTile extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                payment.tenantName ?? 'Unknown Tenant',
+                                payment.tenantName!.toUpperCase(),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -93,7 +94,7 @@ class PaymentTile extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      '\$${payment.amount.toStringAsFixed(2)}',
+                      NumberFormat('#,###').format(payment.amount),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -147,9 +148,13 @@ class PaymentTile extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        _formatTime(payment.createdAt),
+                        DateFormat(' h:mm a').format(
+                          payment.createdAt.toLocal().add(
+                            const Duration(hours: 0),
+                          ),
+                        ),
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 12,
                           color: Colors.grey.shade600,
                         ),
                       ),
@@ -159,33 +164,33 @@ class PaymentTile extends StatelessWidget {
               ),
 
               // Payment Status Indicator (optional)
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.check_circle,
-                      size: 12,
-                      color: Colors.blue.shade600,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Payment Recorded',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.blue.shade600,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              //   const SizedBox(height: 8),
+              //   Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              //     decoration: BoxDecoration(
+              //       color: Colors.blue.shade50,
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //     child: Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       children: [
+              //         Icon(
+              //           Icons.check_circle,
+              //           size: 12,
+              //           color: Colors.blue.shade600,
+              //         ),
+              //         const SizedBox(width: 4),
+              //         Text(
+              //           'Payment Recorded',
+              //           style: TextStyle(
+              //             fontSize: 11,
+              //             color: Colors.blue.shade600,
+              //             fontWeight: FontWeight.w500,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
             ],
           ),
         ),
@@ -248,7 +253,9 @@ class CompactPaymentTile extends StatelessWidget {
           children: [
             Text('Received by: ${payment.receivedBy}'),
             Text(
-              DateFormat('MMM dd, yyyy • h:mm a').format(payment.createdAt),
+              DateFormat('MMM dd, yyyy • h:mm a').format(
+                payment.createdAt.toLocal().add(const Duration(hours: 3)),
+              ),
               style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
             ),
           ],

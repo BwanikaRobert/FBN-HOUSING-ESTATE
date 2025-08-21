@@ -52,6 +52,7 @@ class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
         amountPaid: double.parse(_amountController.text),
         previousBalance: double.parse(_selectedTenant!.lastBalance.toString()),
       );
+      print(paymentResult);
       await ref.read(createPaymentProvider(params).future);
       final tenantService = ref.read(tenantServiceProvider);
       await tenantService.updateTenant(
@@ -59,8 +60,6 @@ class _AddPaymentPageState extends ConsumerState<AddPaymentPage> {
         balanceMonth: paymentResult.balanceOnEndMonth,
         lastPaidMonth: paymentResult.endMonth,
       );
-
-      print(paymentResult);
 
       if (mounted) {
         // Invalidate payments to refresh the list

@@ -26,7 +26,7 @@ RentPaymentResult calculateRentPayment({
 
   // Step 1: Pay off the previous balance first
   if (previousBalance! > 0) {
-    if (remainingAmount >= previousBalance!) {
+    if (remainingAmount >= previousBalance) {
       // Balance cleared
       remainingAmount -= previousBalance;
       startMonth = lastPaidMonth + 1;
@@ -42,15 +42,25 @@ RentPaymentResult calculateRentPayment({
     startMonth = lastPaidMonth + 1;
   }
 
+  // Normalize start month to 1–12
+  if (startMonth > 12) {
+    startMonth = ((startMonth - 1) % 12) + 1;
+  }
+
   // Step 2: Cover full months
   int fullMonths = (remainingAmount ~/ monthlyRent!);
-  double leftover = remainingAmount % monthlyRent!;
+  double leftover = remainingAmount % monthlyRent;
 
   int endMonth = startMonth + fullMonths - 1;
 
   // Step 3: If leftover > 0 → extend to next month with balance
   if (leftover > 0) {
     endMonth += 1;
+  }
+
+  // Normalize end month to 1–12
+  if (endMonth > 12) {
+    endMonth = ((endMonth - 1) % 12) + 1;
   }
 
   return RentPaymentResult(
